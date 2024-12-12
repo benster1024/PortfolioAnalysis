@@ -1,4 +1,4 @@
-# PortfolioAnalysis
+# PersonalPortfolioAnalysis
 
 Welcome to the Portfolio Analysis project! This Python project is designed to help you analyze the performance of your investment portfolio. It provides tools for calculating key metrics such as returns, risk, and diversification. 
 
