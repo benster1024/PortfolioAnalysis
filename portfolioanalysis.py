@@ -15,8 +15,8 @@ benchmark = {
     '^GSPC' : 1
 }
 
-start_date = '2023-01-01'
-end_date = '2024-01-01'
+start_date = '2020-01-01'
+end_date = '2022-01-01'
 
 def ShowBasicGraph(data):
     #plot the adjusted close prices over the specified start and end dates
@@ -24,14 +24,26 @@ def ShowBasicGraph(data):
     plt.show()
 
 def GetData(data):
-#grab the adjusted close price of all stocks in my portfolio
+    """
+    grabs the adjusted close price of all stocks in my portfolio
+    from yahoo finance
+    """
     data = yf.download(list(data.keys()), start=start_date, end=end_date,interval="3mo")['Adj Close']
     return data
-    
+
+def QuaterlyReturns(data):
+    """Generates the cumalative quaterly returns of a set of stock
+    if AAPL had a .17 cumaltive return on 2023-10-01, then we know that the
+    stock grew by 17% from to any given start date to 2023-10-01
+    """
+    quaterly_returns = data.pct_change()
+    quaterly_cum_returns = (quaterly_returns+1).cumprod() - 1
+    quaterly_cum_returns = quaterly_cum_returns.dropna(axis=0)
+    return quaterly_cum_returns  
 def main():
     data= GetData(portfolio)
-    quaterly_returns = data.pct_change()
-    quaterly_cum_returns = (quaterly_returns+1).cumprod()
-    quaterly_cum_returns = quaterly_cum_returns.dropna(axis=0)
-    print(quaterly_cum_returns)
+    returns = QuaterlyReturns(data)
+    ShowBasicGraph(returns)
+
+    
 main()
