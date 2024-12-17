@@ -16,7 +16,7 @@ benchmark = {
 }
 
 start_date = '2020-01-01'
-end_date = '2022-01-01'
+end_date = '2022-01-03'
 
 def ShowBasicGraph(data):
     #plot the adjusted close prices over the specified start and end dates
@@ -28,7 +28,7 @@ def GetData(data):
     grabs the adjusted close price of all stocks in my portfolio
     from yahoo finance
     """
-    data = yf.download(list(data.keys()), start=start_date, end=end_date,interval="3mo")['Adj Close']
+    data = yf.download(list(data.keys()), start=start_date, end=end_date,interval="1d")['Adj Close']
     return data
 
 def QuaterlyReturns(data):
@@ -40,10 +40,20 @@ def QuaterlyReturns(data):
     quaterly_cum_returns = (quaterly_returns+1).cumprod() - 1
     quaterly_cum_returns = quaterly_cum_returns.dropna(axis=0)
     return quaterly_cum_returns  
+
+def Volatility(data):
+    #takes the annualized daily volatility of everything in the portfolio,
+    #assumes the prices movements scale linearly with time
+    data = GetData(data)
+    returns = data.pct_change()
+    volatility = returns.std()
+    annualized_vol = volatility * np.sqrt(252)
+    return annualized_vol * 100
 def main():
-    data= GetData(portfolio)
-    returns = QuaterlyReturns(data)
-    ShowBasicGraph(returns)
+    
+    print(Volatility(portfolio))
+    
 
     
 main()
+ 
