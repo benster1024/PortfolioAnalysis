@@ -6,17 +6,32 @@ import matplotlib.pyplot as plt
 import statsmodels.api as sm
 
 portfolio = {
-    'AAPL' : 10,
-    'TSLA' : 5,
-    'MSFT' : 15,
-    'GOOGL' : 7
+   
 }
 benchmark = {
     '^GSPC' : 1
 }
 
+def get_user_portfolio(portfolio_name):
+    print("Enter 'done' as the Ticke when you're finished.\n")
+    
+    user_dict = {}
+    while True:
+        key = input("Enter Ticker (or 'done' to stop): ")
+        if key.lower() == 'done':
+            break
+        value = input(f"Enter amount of shares for '{key}': ")
+        user_dict[key] = value
+    return user_dict
+
+def get_user_benchmark(benchmark):
+    user_dict = {}
+    key = input("Enter Benchmark's Ticker")
+    user_dict[key] = 1
+    return user_dict
+
 start_date = '2020-01-01'
-end_date = '2022-01-03'
+end_date = '2022-04-01'
 
 def ShowBasicGraph(data):
     #plot the adjusted close prices over the specified start and end dates
@@ -50,9 +65,9 @@ def Volatility(data):
     annualized_vol = volatility * np.sqrt(252)
     return annualized_vol * 100
 def main():
-    
-    print(Volatility(portfolio))
-    
+    inputted = get_user_portfolio(portfolio)
+    data = GetData(inputted)
+    print(data)
 
     
 main()
