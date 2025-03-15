@@ -29,21 +29,24 @@ def get_user_benchmark(benchmark):
     key = input("Enter Benchmark's Ticker")
     user_dict[key] = 1
     return user_dict
-
-start_date = '2020-01-01'
-end_date = '2022-04-01'
+def get_date():
+    print("Dates must be entered in a 'yyyy-mm-dd' format")
+    start_date = input("Enter the start date of analysis: ")
+    end_date = input("Enter the end data of analysis: ")
+    return start_date, end_date
 
 def ShowBasicGraph(data):
     #plot the adjusted close prices over the specified start and end dates
     data.plot()
     plt.show()
 
-def GetData(data):
+def GetData(data, start_date, end_date):
     """
     grabs the adjusted close price of all stocks in my portfolio
     from yahoo finance
     """
-    data = yf.download(list(data.keys()), start=start_date, end=end_date,interval="1d")['Adj Close']
+    data = yf.download(list(data.keys()), start=start_date, end=end_date, interval="1d", auto_adjust=False)
+    adj_close_data = data['Adj Close']
     return data
 
 def QuaterlyReturns(data):
@@ -66,9 +69,9 @@ def Volatility(data):
     return annualized_vol * 100
 def main():
     inputted = get_user_portfolio(portfolio)
-    data = GetData(inputted)
+    start_date, end_date = get_date()
+    data = GetData(inputted, start_date, end_date)
     print(data)
 
-    
 main()
  
